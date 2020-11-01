@@ -1,0 +1,58 @@
+[
+  {
+    "count": 4,
+    "description": "201-piece LEGO® brick set, mixed colors",
+    "id": "7567ec4b-b10c-48c5-9345-fc73c48a80aa",
+    "price": 14.99,
+    "title": "BYGGLEK"
+  },
+  {
+    "count": 6,
+    "description": "3-piece train set",
+    "id": "7567ec4b-b10c-48c5-9345-fc73c48a80a0",
+    "price": 6.99,
+    "title": "LILLABO"
+  },
+  {
+    "count": 7,
+    "description": "Watercolor box, mixed colors",
+    "id": "7567ec4b-b10c-48c5-9345-fc73c48a80a2",
+    "price": 7.99,
+    "title": "MÅLA"
+  },
+  {
+    "count": 12,
+    "description": "Soft toy, llam",
+    "id": "7567ec4b-b10c-48c5-9345-fc73c48a80a1",
+    "price": 4.99,
+    "title": "SAGOSKATT"
+  },
+  {
+    "count": 7,
+    "description": "Doll furniture, bedroom",
+    "id": "7567ec4b-b10c-48c5-9345-fc73c48a80a2",
+    "price": 17.99,
+    "title": "HUSET"
+  },
+  {
+    "count": 8,
+    "description": "Toy cash register",
+    "id": "7567ec4b-b10c-48c5-9345-fc73348a80a1",
+    "price": 17.99,
+    "title": "DUKTIG"
+  },
+  {
+    "count": 2,
+    "description": "Soft toy, dinosaur/dinosaur/brontosaurus",
+    "id": "7567ec4b-b10c-48c5-9445-fc73c48a80a2",
+    "price": 5.99,
+    "title": "JÄTTELIK"
+  },
+  {
+    "count": 3,
+    "description": "Abacus",
+    "id": "7567ec4b-b10c-45c5-9345-fc73c48a80a1",
+    "price": 9.99,
+    "title": "MULA"
+  }
+]
