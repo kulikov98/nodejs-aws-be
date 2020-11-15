@@ -1,15 +1,20 @@
-import { ClientConfig } from "pg";
+import { ConnectionOptions } from "typeorm";
+import {Product, Stock} from "../models/index";
 
 
 const { PG_HOST, PG_PORT, PG_DATABASE, PG_USERNAME, PG_PASSWORD } = process.env;
-export const CLIENT_CONFIG: ClientConfig = {
+
+export const CONNECTION_OPTIONS: ConnectionOptions = {
+    type: "postgres",
     host: PG_HOST,
     port: +PG_PORT,
-    database: PG_DATABASE,
-    user: PG_USERNAME,
+    username: PG_USERNAME,
     password: PG_PASSWORD,
+    database: PG_DATABASE,
+    entities: [Product, Stock],
     ssl: {
         rejectUnauthorized: false
     },
-    connectionTimeoutMillis: 5000
+    connectTimeoutMS: 5000,
+    synchronize: true,
 }

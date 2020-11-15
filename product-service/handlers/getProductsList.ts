@@ -1,23 +1,28 @@
-import { APIGatewayProxyHandler } from 'aws-lambda';
-import { Client } from 'pg';
+import "reflect-metadata";
 import 'source-map-support/register';
-import { CLIENT_CONFIG } from "../database/clientConfig";
+import { APIGatewayProxyHandler } from 'aws-lambda';
+import { CONNECTION_OPTIONS } from "../database/clientConfig";
+import { Connection, createConnection } from "typeorm";
+import { Product } from "../models/index";
+import { ProductDataMapper } from "../helpers/ProductDataMapper";
 
 
 export const getProductsList: APIGatewayProxyHandler = async () => {
-    const client = new Client(CLIENT_CONFIG);
-    const query = 'select * from products p left join stocks s on p.id = s.product_id';
+    let connection: Connection;
 
     try {
-        await client.connect();
-        const { rows: products } = await client.query(query);
+        connection = await createConnection(CONNECTION_OPTIONS);
+        const productRepository = connection.getRepository(Product);
+        const products = await productRepository.find({ relations: ['stock'] });
+
+        const productsDTO = products.map(product => ProductDataMapper.toDomain(product));
 
         return {
             headers: {
                 'Access-Control-Allow-Origin': '*'
             },
             statusCode: 200,
-            body: JSON.stringify(products, null, 2),
+            body: JSON.stringify(productsDTO, null, 2),
         };
     } catch(e) {
         return {
@@ -25,9 +30,11 @@ export const getProductsList: APIGatewayProxyHandler = async () => {
                 'Access-Control-Allow-Origin': '*'
             },
             statusCode: 500,
-            body: 'Internal server error',
+            body: e.message,
         }
     } finally {
-        await client.end();
+        if (connection) {
+            await connection.close();
+        }
     }
 }
