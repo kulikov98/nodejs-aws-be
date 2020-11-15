@@ -8,7 +8,9 @@ const serverlessConfiguration: Serverless = {
   custom: {
     webpack: {
       webpackConfig: './webpack.config.js',
-      includeModules: true
+      includeModules: {
+        forceInclude: ['pg'],
+      }
     }
   },
   // Add the serverless-webpack plugin
