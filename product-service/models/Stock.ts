@@ -1,10 +1,12 @@
 import {Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from "typeorm";
-import { Product } from "./index";
+import {IProduct} from "./types/IProduct";
+import {IStock} from "./types/IStock";
+
 
 @Entity({
     name: 'stocks'
 })
-export class Stock {
+export class Stock implements IStock {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
@@ -13,5 +15,5 @@ export class Stock {
 
     @OneToOne('Product', 'stock')
     @JoinColumn()
-    product: Product;
+    product: IProduct;
 }

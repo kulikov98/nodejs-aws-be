@@ -1,10 +1,10 @@
 import "reflect-metadata";
 import 'source-map-support/register';
-import { APIGatewayProxyHandler } from 'aws-lambda';
-import { CONNECTION_OPTIONS } from "../database/clientConfig";
-import { Connection, createConnection } from "typeorm";
-import { Product } from "../models/index";
-import { ProductDataMapper } from "../helpers/ProductDataMapper";
+import {APIGatewayProxyHandler} from 'aws-lambda';
+import {CONNECTION_OPTIONS} from "../database/clientConfig";
+import {Connection, createConnection} from "typeorm";
+import {Product} from "../models/Product";
+import {ProductDataMapper} from "../helpers/ProductDataMapper";
 
 
 export const getProductsById: APIGatewayProxyHandler = async (event, _context) => {
@@ -13,7 +13,7 @@ export const getProductsById: APIGatewayProxyHandler = async (event, _context) =
     try {
         connection = await createConnection(CONNECTION_OPTIONS);
         const productRepository = connection.getRepository(Product);
-        const product = await productRepository.findOne({ relations: ['stock'], where: { id: event.pathParameters.id } });
+        const product = await productRepository.findOne({relations: ['stock'], where: {id: event.pathParameters.id}});
         const productDTO = ProductDataMapper.toDomain(product);
 
         return {
@@ -23,7 +23,7 @@ export const getProductsById: APIGatewayProxyHandler = async (event, _context) =
             statusCode: 200,
             body: JSON.stringify(productDTO, null, 2),
         };
-    } catch(e) {
+    } catch (e) {
         return {
             headers: {
                 'Access-Control-Allow-Origin': '*'

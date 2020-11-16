@@ -1,8 +1,9 @@
-import { ConnectionOptions } from "typeorm";
-import {Product, Stock} from "../models/index";
+import {ConnectionOptions} from "typeorm";
+import {Product} from "../models/Product";
+import {Stock} from "../models/Stock";
 
 
-const { PG_HOST, PG_PORT, PG_DATABASE, PG_USERNAME, PG_PASSWORD } = process.env;
+const {PG_HOST, PG_PORT, PG_DATABASE, PG_USERNAME, PG_PASSWORD} = process.env;
 
 export const CONNECTION_OPTIONS: ConnectionOptions = {
     type: "postgres",
@@ -16,5 +17,6 @@ export const CONNECTION_OPTIONS: ConnectionOptions = {
         rejectUnauthorized: false
     },
     connectTimeoutMS: 5000,
-    synchronize: true,
+    synchronize: false,
+    logging: true,
 }

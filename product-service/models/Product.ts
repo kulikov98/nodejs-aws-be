@@ -1,10 +1,12 @@
 import {Column, Entity, OneToOne, PrimaryGeneratedColumn} from "typeorm";
-import {Stock} from "./index";
+import {IStock} from "./types/IStock";
+import {IProduct} from "./types/IProduct";
+
 
 @Entity({
     name: 'products'
 })
-export class Product {
+export class Product implements IProduct {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
@@ -17,8 +19,6 @@ export class Product {
     @Column()
     price: number;
 
-    @OneToOne('Stock', 'product')
-    stock: Stock;
-
-    count: Stock;
+    @OneToOne('Stock', 'product', { cascade: true })
+    stock: IStock;
 }

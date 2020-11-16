@@ -1,4 +1,3 @@
-import { getProductsList } from "./handlers/getProductsList";
-import { getProductsById } from "./handlers/getProductsById";
-
-export { getProductsList, getProductsById };
+export {getProductsList} from "./handlers/getProductsList";
+export {getProductsById} from "./handlers/getProductsById";
+export {createProduct} from "./handlers/createProduct";

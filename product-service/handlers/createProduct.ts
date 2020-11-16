@@ -3,26 +3,37 @@ import 'source-map-support/register';
 import {APIGatewayProxyHandler} from 'aws-lambda';
 import {CONNECTION_OPTIONS} from "../database/clientConfig";
 import {Connection, createConnection} from "typeorm";
-import {ProductDataMapper} from "../helpers/ProductDataMapper";
 import {Product} from "../models/Product";
 
 
-export const getProductsList: APIGatewayProxyHandler = async () => {
+export const createProduct: APIGatewayProxyHandler = async (event) => {
     let connection: Connection;
 
     try {
+        const {title, description, price, count} = JSON.parse(event.body);
+
+        // dumb validation
+        if (!title || !description || !price || !count) {
+            return {
+                headers: {
+                    'Access-Control-Allow-Origin': '*'
+                },
+                statusCode: 400,
+                body: 'Invalid arguments',
+            }
+        }
+
         connection = await createConnection(CONNECTION_OPTIONS);
         const productRepository = connection.getRepository(Product);
-        const products = await productRepository.find({relations: ['stock']});
-
-        const productsDTO = products.map(product => ProductDataMapper.toDomain(product));
+        const newProduct = productRepository.create({ title, description, price, stock: { count } });
+        await productRepository.save(newProduct);
 
         return {
             headers: {
                 'Access-Control-Allow-Origin': '*'
             },
-            statusCode: 200,
-            body: JSON.stringify(productsDTO, null, 2),
+            statusCode: 201,
+            body: null,
         };
     } catch (e) {
         return {
@@ -37,4 +48,5 @@ export const getProductsList: APIGatewayProxyHandler = async () => {
             await connection.close();
         }
     }
+
 }
