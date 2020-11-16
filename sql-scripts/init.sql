@@ -7,7 +7,7 @@ create table products (
 
 create table stocks (
     id uuid primary key default uuid_generate_v4(),
-    product_id uuid references products(id),
+    "productId" uuid references products(id),
     count integer
 );
 
@@ -20,7 +20,7 @@ with product_insert as (
    values ('BYGGLEK', '201-piece LEGO® brick set, mixed colors', 14.99)
    RETURNING id
 )
-insert into stocks (product_id, count) values
+insert into stocks ("productId", count) values
 ((select id from product_insert), 10);
 
 -- product 2
@@ -29,7 +29,7 @@ with product_insert as (
    values ('LILLABO', '45-piece train set with track', 29.99)
    RETURNING id
 )
-insert into stocks (product_id, count) values
+insert into stocks ("productId", count) values
 ((select id from product_insert), 20);
 
 -- product 3
@@ -38,5 +38,5 @@ with product_insert as (
    values ('MÅLA', 'Watercolor box, mixed colors', 7.99)
    RETURNING id
 )
-insert into stocks (product_id, count) values
+insert into stocks ("productId", count) values
 ((select id from product_insert), 20);
