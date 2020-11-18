@@ -8,7 +8,9 @@ const serverlessConfiguration: Serverless = {
   custom: {
     webpack: {
       webpackConfig: './webpack.config.js',
-      includeModules: true
+      includeModules: {
+        forceInclude: ['pg'],
+      }
     }
   },
   // Add the serverless-webpack plugin
@@ -55,6 +57,18 @@ const serverlessConfiguration: Serverless = {
         }
       ]
     },
+    createProduct: {
+      handler: 'handler.createProduct',
+      events: [
+        {
+          http: {
+            method: 'post',
+            path: 'products/',
+            cors: true
+          }
+        }
+      ]
+    }
   }
 }
 
