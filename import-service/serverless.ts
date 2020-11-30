@@ -21,14 +21,44 @@ const serverlessConfiguration: Serverless = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      SQS_URL: {
+        'Ref': 'SQSQueue'
+      }
     },
     iamRoleStatements: [
       {
         Effect: "Allow",
         Action: "s3:*",
         Resource: 'arn:aws:s3:::kulikov98-nodejs-aws-uploaded/*',
+      },
+      {
+        Effect: "Allow",
+        Action: "sqs:*",
+        Resource: {
+          "Fn::GetAtt": ["SQSQueue", "Arn"],
+        }
       }
     ],
+  },
+  resources: {
+    Resources: {
+      SQSQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'import-service-queue'
+        }
+      }
+    },
+    Outputs: {
+      sqs: {
+        Value: {
+          "Fn::GetAtt": ["SQSQueue", "Arn"],
+        },
+        Export: {
+          Name: 'sqs'
+        }
+      }
+    }
   },
   functions: {
     importProductsFile: {
