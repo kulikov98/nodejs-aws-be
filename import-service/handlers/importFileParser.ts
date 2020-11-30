@@ -1,11 +1,12 @@
 import {S3Event, S3Handler} from 'aws-lambda';
 import 'source-map-support/register';
-import {S3} from 'aws-sdk';
+import {S3, SQS} from 'aws-sdk';
 import csv from 'csv-parser';
 
 export const importFileParser: S3Handler = (event: S3Event, _context) => {
     try {
         const s3 = new S3({ region: 'us-east-1' });
+        const sqs = new SQS();
         const BUCKET = 'kulikov98-nodejs-aws-uploaded';
 
         event.Records.forEach(record => {
@@ -15,7 +16,12 @@ export const importFileParser: S3Handler = (event: S3Event, _context) => {
             }).createReadStream();
 
             s3Stream.pipe(csv())
-                .on('data', data => console.log(data))
+                .on('data', async (product) => {
+                    await sqs.sendMessage({
+                        QueueUrl: process.env.SQS_URL,
+                        MessageBody: JSON.stringify(product)
+                    }).promise();
+                })
                 .on('end', async () => {
                     await s3.copyObject({
                         Bucket: BUCKET,
@@ -25,6 +31,6 @@ export const importFileParser: S3Handler = (event: S3Event, _context) => {
                 })
         });
     } catch (e) {
-        console.log(`Error occured: ${e.message}`);
+        console.log(`Error: ${e.message}`);
     }
 }

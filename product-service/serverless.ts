@@ -22,8 +22,40 @@ const serverlessConfiguration: Serverless = {
       minimumCompressionSize: 1024,
     },
     environment: {
+      SNS_ARN: {
+        'Ref': 'SNSTopic'
+      },
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
     },
+    iamRoleStatements: [
+      {
+        Effect: "Allow",
+        Action: "sns:*",
+        Resource: {
+          'Ref': 'SNSTopic'
+        }
+      }
+    ]
+  },
+  resources: {
+    Resources: {
+      SNSTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: 'product-service-topic'
+        }
+      },
+      SNSSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Endpoint: 'kulikov98@gmail.com',
+          Protocol: 'email',
+          TopicArn: {
+            'Ref': 'SNSTopic'
+          }
+        }
+      }
+    }
   },
   functions: {
     getProductsList: {
@@ -65,6 +97,17 @@ const serverlessConfiguration: Serverless = {
             method: 'post',
             path: 'products/',
             cors: true
+          }
+        }
+      ]
+    },
+    catalogBatchProcess: {
+      handler: 'handler.catalogBatchProcess',
+      events: [
+        {
+          sqs: {
+            batchSize: 5,
+            arn: { "Fn::ImportValue" : 'sqs' },
           }
         }
       ]
